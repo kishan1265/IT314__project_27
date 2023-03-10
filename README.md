@@ -8,3 +8,4 @@ The list of available lab submissions are as follows:
 - IT314_Lab1.pdf
 - IT314_Lab2.pdf
 - IT314_Lab3.pdf
+- IT314_Lab4.pdf
