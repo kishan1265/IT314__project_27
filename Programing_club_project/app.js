@@ -23,8 +23,8 @@ app.set('view engine','ejs');
 
 // load the  middleware
 app.use(cookieParser())
-const routes=require('./server/routes/Routes.js');
-app.use('/',routes);
+// const routes=require('./server/routes/Routes.js');
+// app.use('/',routes);
 const authroutes=require('./server/routes/authRoutes.js');
 app.use('/auth',authroutes);
 // app.use('/signup',routes);
