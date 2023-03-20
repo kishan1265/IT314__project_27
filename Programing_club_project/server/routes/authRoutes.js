@@ -5,7 +5,7 @@ router.get('/',GETController.home_page);
 
 router.get('/login',GETController.login_page);
 router.get('/register',GETController.signup_page);
-
+// post routes
 const authController = require('../controllers/POST/authController.js');
 router.post('/register',authController.register);
 router.post('/login',authController.login);
