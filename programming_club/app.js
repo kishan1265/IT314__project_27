@@ -8,16 +8,16 @@ const passport = require('passport');
 const app = express();
 
 // DB Config
-const db = require('./config/keys').MongoURI;
+//const db = require('./config/keys').MongoURI;
 
 // Passport Config
-require('./config/passport')(passport);
+//require('./config/passport')(passport);
 
 // Connect to MongoDB
-mongoose
-  .connect(db, { useNewUrlParser: true })
-  .then(() => console.log('MongoDB Connected'))
-  .catch((err) => console.log(err));
+// mongoose
+//   .connect(db, { useNewUrlParser: true })
+//   .then(() => console.log('MongoDB Connected'))
+//   .catch((err) => console.log(err));
 
 // EJS
 app.use(expressLayouts);
@@ -52,7 +52,7 @@ app.use(function (req, res, next) {
 
 // Routes
 app.use('/', require('./routes/index.js'));
-app.use('/users', require('./routes/users.js'));
+//app.use('/users', require('./routes/users.js'));
 
 const PORT = process.env.PORT || 5000;
 
