@@ -163,7 +163,33 @@ router.post('/forgot', (req, res) => {
     ) {
       errors.push({ msg: 'Please Register using correct daiict Id' });
     }
-
+    if (errors.length > 0) {
+        res.render('forgot', {
+          errors,
+          email,
+        });
+      } else {
+        //res.send('pass');
+        User.findOne({ email: email }).then((user) => {
+          if (user) {
+            try {
+              const secret = JWT_SECRET + user.password;
+              const token = jwt.sign({ email: user.email, id: user._id }, secret, {
+                expiresIn: '5m',
+              });
+              const link = `http://localhost:5000/users/reset/${user._id}/${token}`;
+              res.render('emailverify', { email: user.email });
+        } catch (error) {}
+      } else {
+        errors.push({ msg: 'Email not exists' });
+        res.render('forgot', {
+          errors,
+          email,
+        });
+    }
+    });
+  }
+           
 });
 
 module.exports = router;
