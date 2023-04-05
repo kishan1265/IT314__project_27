@@ -71,4 +71,37 @@ router.post('/register', (req, res) => {
     
       });
 
+    //forgot password
+
+router.post('/forgot', (req, res) => {
+    //console.log(req.body);
+    // res.send('hello');
+    const email = req.body.email;
+    let errors = [];
+  
+    //console.log(programe);
+    //check required fields
+    if (!email) {
+      errors.push({ msg: 'Please enter all fields' });
+    }
+  
+    //check email id of daiict
+    if (
+      email.substr(-13, 13) != '@daiict.ac.in' ||
+      email[1] != '0' ||
+      email[0] != '2' ||
+      !(email[4] == '0' || email[4] == '1' || email[4] == '2') ||
+      !(
+        email[5] == '0' ||
+        email[5] == '1' ||
+        email[5] == '2' ||
+        email[5] == '3'
+      ) ||
+      email[6] >= '6'
+    ) {
+      errors.push({ msg: 'Please Register using correct daiict Id' });
+    }
+
+});
+
 module.exports = router;
