@@ -67,8 +67,70 @@ router.post('/register', (req, res) => {
     ) {
       errors.push({ msg: 'Please Register using correct daiict Id' });
     }
+    if (password != password2) {
+      //check passwords match
+      errors.push({ msg: 'Passwords do not match' });
+    }
   
-    
+    //check passwords match
+    if (password.length < 6) {
+      errors.push({ msg: 'Password must be at least 6 characters' });
+    }
+  
+    if (errors.length > 0) {
+      res.render('register', {
+        errors,
+        name,
+        email,
+        programe,
+        batch,
+        password,
+        password2,
       });
+    } else {
+      //res.send('pass');
+      User.findOne({ email: email }).then((user) => {
+        if (user) {
+          errors.push({ msg: 'Email already exists' });
+          res.render('register', {
+            errors,
+            name,
+            email,
+            programe,
+            batch,
+            password,
+            password2,
+          });
+        } else {
+          const newUser = new User({
+            name,
+            email,
+            password,
+            programe,
+            batch,
+          });
+          bcrypt.genSalt(10, (err, salt) => {
+            bcrypt.hash(newUser.password, salt, (err, hash) => {
+              if (err) throw err;
+              newUser.password = hash;
+              newUser
+                .save()
+                .then((user) => {
+                  req.flash(
+                    'success_msg',
+                    'You are now registered and can log in'
+                  );
+                  res.redirect('/users/login');
+                })
+                .catch((err) => console.log(err));
+            });
+          });
+          // console.log(newUser);
+          // res.send('hello');
+        }
+      });
+    }
+    
+});
 
 module.exports = router;
