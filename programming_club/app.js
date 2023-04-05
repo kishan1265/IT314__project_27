@@ -60,7 +60,7 @@ const PORT = process.env.PORT || 5000;
 app.listen(PORT, console.log(`Server running on  ${PORT}`));
 
 
-// error middleware for custom errors
+// error middleware for custom error to help find the error
 app.use((err,req,res,next)=>{
   const errorStatus=err.statusCode || 500;
   const errorMessages=err.message || 'Something went wrong';
