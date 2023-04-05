@@ -16,4 +16,17 @@ function check() {
 
 }
 
+//  function to set the silde show automatic
+var slideIndex = 0;
 
+function mySlider() {
+    var imgs = document.getElementsByClassName("item");
+    for (var i = 0; i < imgs.length; i++) {
+        imgs[i].classList.remove('active');
+    }
+    slideIndex++;
+    if (slideIndex > imgs.length) { slideIndex = 1 }
+    imgs[slideIndex - 1].classList.add("active");
+
+    check()
+}
