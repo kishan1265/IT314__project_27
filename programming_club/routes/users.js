@@ -11,13 +11,18 @@ const JWT_SECRET =
 
 //Load User model
 const User = require('../models/User');
-// const { forwardAuthenticated } = require("../config/auth");
+const { forwardAuthenticated } = require('../config/auth');
 
 // Login Page
 router.get('/login', (req, res) => res.render('login'));
 
 // Register Page
 router.get('/register', (req, res) => res.render('register'));
+
+// Forgot password page
+router.get('/forgot', (req, res) => res.render('forgot'));
+
+router.get('/varify', (req, res) => res.render('emailvarify'));
 
 router.get(`/reset/:id/:token`, (req, res) => {
   const { id, token } = req.params;
@@ -49,47 +54,54 @@ router.post('/login', (req, res, next) => {
   })(req, res, next);
 });
 
+//logout
+router.get('/logout', (req, res) => {
+  req.logout(function (err) {
+    req.flash('success_msg', 'You are logged out');
+    res.redirect('/users/login');
+  });
+});
+
 // Register
 router.post('/register', (req, res) => {
-  
-    //console.log(req.body);
-    // res.send('hello');
-    const { name, email, programe, batch, password, password2 } = req.body;
-    let errors = [];
-  
-    //console.log(programe);
-    //check required fields
-    if (
-      !name ||
-      !email ||
-      !password ||
-      !password2 ||
-      programe == '0' ||
-      batch == '0'
-    ) {
-      errors.push({ msg: 'Please enter all fields' });
-    }
-  
-    //check email id of daiict
-    if (
-      email.substr(-13, 13) != '@daiict.ac.in' ||
-      email[1] != '0' ||
-      email[0] != '2' ||
-      !(email[4] == '0' || email[4] == '1' || email[4] == '2') ||
-      !(
-        email[5] == '0' ||
-        email[5] == '1' ||
-        email[5] == '2' ||
-        email[5] == '3'
-      ) ||
-      email[6] >= '6'
-    ) {
-      errors.push({ msg: 'Please Register using correct daiict Id' });
-    }
-    if (password != password2) {
-      //check passwords match
-      errors.push({ msg: 'Passwords do not match' });
-    }
+  //console.log(req.body);
+  // res.send('hello');
+  const { name, email, programe, batch, password, password2 } = req.body;
+  let errors = [];
+
+  //console.log(programe);
+  //check required fields
+  if (
+    !name ||
+    !email ||
+    !password ||
+    !password2 ||
+    programe == '0' ||
+    batch == '0'
+  ) {
+    errors.push({ msg: 'Please enter all fields' });
+  }
+
+  //check email id of daiict
+  if (
+    email.substr(-13, 13) != '@daiict.ac.in' ||
+    email[1] != '0' ||
+    email[0] != '2' ||
+    !(email[4] == '0' || email[4] == '1' || email[4] == '2') ||
+    !(
+      email[5] == '0' ||
+      email[5] == '1' ||
+      email[5] == '2' ||
+      email[5] == '3'
+    ) ||
+    email[6] >= '6'
+  ) {
+    errors.push({ msg: 'Please Register using correct daiict Id' });
+  }
+  if (password != password2) {
+    //check passwords match
+    errors.push({ msg: 'Passwords do not match' });
+  }
 
   //check passwords match
   if (password.length < 6) {
@@ -197,7 +209,7 @@ router.post('/forgot', (req, res) => {
           });
           const link = `http://localhost:5000/users/reset/${user._id}/${token}`;
 
-           var transporter = nodemailer.createTransport({
+          var transporter = nodemailer.createTransport({
             service: 'gmail',
             auth: {
               user: 'programming.club.daiict1@gmail.com',
@@ -221,7 +233,7 @@ router.post('/forgot', (req, res) => {
           });
 
           console.log(link);
-          
+
           res.render('emailverify', { email: user.email });
         } catch (error) {}
       } else {
