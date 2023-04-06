@@ -1,0 +1,45 @@
+<link rel="stylesheet" href="css/home.css">
+<!-- <h1 class="mt-4">Dashboard</h1> -->
+<%- include('includes/navbar.ejs') %>
+<!-- <p class="lead mb-3">Welcome <%= user.name %></p> -->
+<section class="slider" id="slide-img">
+    <div class="slider-img">
+        <div class="item item1 active">
+            <img src="images/pic1.jpg" />
+        </div>
+        <div class="item item2">
+            <img src="images/pic2.jpg" />
+        </div>
+        <div class="item item3">
+            <img src="images/pic3.jpg" />
+        </div>
+    </div>
+    <p class="next">
+        <i class="fas fa-chevron-right"></i>
+    </p>
+    <p class="prev">
+        <i class="fas fa-chevron-left"></i>
+    </p>
+
+</section>
+<div class="cont">
+    <div class="month">
+        <span id="month"></span>
+    </div>
+    <div class="day">
+        <span id="day"></span>
+    </div>
+</div>
+
+<script src="jsfile/home.js"></script>
+
+<script>
+    const today = new Date();
+    const day = today.toLocaleDateString('en-US', { weekday: 'long' });
+    const month = today.toLocaleDateString('en-US', { month: 'long' });
+    const date = today.getDate();
+    const year = today.getFullYear();
+
+    document.getElementById('day').innerHTML = `${date}`;
+    document.getElementById('month').innerHTML = `${month}, ${year}`;    
+</script>
