@@ -196,6 +196,32 @@ router.post('/forgot', (req, res) => {
             expiresIn: '5m',
           });
           const link = `http://localhost:5000/users/reset/${user._id}/${token}`;
+
+           var transporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+              user: 'programming.club.daiict1@gmail.com',
+              pass: 'eevoxrcznbpnupey',
+            },
+          });
+
+          var mailOptions = {
+            from: 'programming.club.daiict1@gmail.com',
+            to: 'kishansangani78@gmail.com',
+            subject: 'Password Reset',
+            text: link,
+          };
+
+          transporter.sendMail(mailOptions, function (error, info) {
+            if (error) {
+              console.log(error);
+            } else {
+              console.log('Email sent: ' + info.response);
+            }
+          });
+
+          console.log(link);
+          
           res.render('emailverify', { email: user.email });
         } catch (error) {}
       } else {
