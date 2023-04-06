@@ -87,4 +87,56 @@ router.post('/register', (req, res) => {
   }
 });
 
+router.post(`/reset/:id/:token`, (req, res) => {
+  const { id, token } = req.params;
+  const { password } = req.body;
+  let errors = [];
+  // console.log(password);
+  // console.log(req.params);
+
+  //res.send('pass');
+  User.findOne({ _id: id }).then((user) => {
+    if (!user) {
+      errors.push({ msg: 'User not exists' });
+      res.render('forget', {
+        errors,
+        email,
+      });
+    }
+    const secret = JWT_SECRET + user.password;
+
+    try {
+      const verify = jwt.verify(token, secret);
+      //console.log(user.password + ' old');
+      bcrypt.genSalt(10, (err, salt) => {
+        bcrypt.hash(password, salt, async (err, hash) => {
+          if (err) throw err;
+          var newpassword = hash;
+          //console.log(newpassword + ' change');
+          await User.updateOne(
+            {
+              _id: id,
+            },
+            {
+              $set: {
+                password: newpassword,
+              },
+            }
+          );
+        });
+      });
+      //console.log(user.password + ' change');
+      //console.log(user.password + ' new');
+      //res.json({ status: 'password updated' });
+      //res.render('reset', { email: verify.email, status: 'verified' });
+      //res.render('emailvarify', { email: verify.email });
+      res.redirect('/users/login');
+    } catch (error) {
+      console.log(error);
+      //res.send('Not verified');
+      res.json({ status: 'Something went wrong' });
+    }
+  });
+});
+
 module.exports = router;
