@@ -41,7 +41,7 @@ module.exports = function (passport) {
 
   passport.serializeUser(function (user, cb) {
     process.nextTick(function () {
-      return cb(null, user.id);
+      return cb(null, user);
     });
   });
 
