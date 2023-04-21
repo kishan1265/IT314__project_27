@@ -32,6 +32,15 @@ router.get(
   //console.log(req.user.name)
 );
 
-module.exports = router;
+router.get('/event', ensureAuthenticated, function (req, res) {
+  Event.find().then((data) => {
+    //console.log(data);
+    res.render('event.ejs', {
+      user: req.user,
+      practices: data,
+    });
+  });
+  //console.log(req.user.name)
+});
 
 module.exports = router;
