@@ -17,6 +17,45 @@ router.get(
     //console.log(req.user.name)
   );
 
+//post edit_profile
+
+router.post('/edit_profile', (req, res) => {
+    console.log(req.body);
+    // res.send('hello');
+    const { name, email, programe, batch, cfprofile, address } = req.body;
+    User.findOne({ email: email }).then((user) => {
+      //console.log(user);
+      try {
+        change = async (req, res) => {
+          await User.updateOne(
+            {
+              _id: user.id,
+            },
+            {
+              $set: {
+                name: name,
+                programe: programe,
+                batch: batch,
+                cfprofile: cfprofile,
+                address: address,
+              },
+            }
+          );
+        };
+        change();
+  
+        res.redirect('/profile');
+      } catch (error) {
+        console.log(error);
+        //res.send('Not verified');
+        res.json({ status: 'Something went wrong' });
+      }
+    });
+    //}
+  });
+
+
+
 router.get(
   '/dashboard',
   ensureAuthenticated,
