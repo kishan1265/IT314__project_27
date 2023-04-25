@@ -6,6 +6,56 @@ const { ensureAuthenticated } = require('../config/auth');
 // Welcome Page
 router.get('/', (req, res) => res.render('welcome'));
 
+//get edit_profile
+router.get(
+    '/edit_profile',
+    ensureAuthenticated,
+    (req, res) =>
+      res.render('edit_profile.ejs', {
+        user: req.user,
+      })
+    //console.log(req.user.name)
+  );
+
+//post edit_profile
+
+router.post('/edit_profile', (req, res) => {
+    console.log(req.body);
+    // res.send('hello');
+    const { name, email, programe, batch, cfprofile, address } = req.body;
+    User.findOne({ email: email }).then((user) => {
+      //console.log(user);
+      try {
+        change = async (req, res) => {
+          await User.updateOne(
+            {
+              _id: user.id,
+            },
+            {
+              $set: {
+                name: name,
+                programe: programe,
+                batch: batch,
+                cfprofile: cfprofile,
+                address: address,
+              },
+            }
+          );
+        };
+        change();
+  
+        res.redirect('/profile');
+      } catch (error) {
+        console.log(error);
+        //res.send('Not verified');
+        res.json({ status: 'Something went wrong' });
+      }
+    });
+    //}
+  });
+
+
+
 router.get(
   '/dashboard',
   ensureAuthenticated,
@@ -72,4 +122,48 @@ router.post('/event', function (req, res) {
   //console.log(req.user.name);
 });
 
+router.get(
+  '/feedback',
+  ensureAuthenticated,
+  (req, res) =>
+    res.render('user_feedback', {
+      user: req.user,
+    })
+  //console.log(req.user.name)
+);
+
+router.post('/feedback', function (req, res) {
+  const { title, feedback } = req.body;
+  const email = req.user.email;
+  const name = req.user.name;
+
+  //console.log(email, title, name, feedback);
+
+  let errors = [];
+
+  if (!title || !feedback) {
+    errors.push({ msg: 'Please enter all fields' });
+  }
+
+  if (errors.length > 0) {
+    res.render('user_feedback', {
+      errors,
+      title,
+      feedback,
+    });
+  } else {
+    const newFeedback = new Feedback({
+      title,
+      email,
+      name,
+      feedback,
+    });
+    newFeedback.save().then((feedback) => {
+      req.flash('success_msg', 'Your feedback has been submitted');
+      res.redirect('/feedback');
+    });
+  }
+});
+
 module.exports = router;
+
