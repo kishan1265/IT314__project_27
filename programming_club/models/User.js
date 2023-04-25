@@ -14,11 +14,11 @@ const UserSchema = new mongoose.Schema({
     required: true,
   },
   programe: {
-    type: Number,
+    type: String,
     required: true,
   },
   batch: {
-    type: Number,
+    type: String,
     required: true,
   },
   date: {

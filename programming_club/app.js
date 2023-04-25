@@ -8,16 +8,16 @@ const passport = require('passport');
 const app = express();
 
 // DB Config
-//const db = require('./config/keys').MongoURI;
+const db = require('./config/keys').MongoURI;
 
 // Passport Config
-//require('./config/passport')(passport);
+require('./config/passport')(passport);
 
 // Connect to MongoDB
-// mongoose
-//   .connect(db, { useNewUrlParser: true })
-//   .then(() => console.log('MongoDB Connected'))
-//   .catch((err) => console.log(err));
+mongoose
+  .connect(db, { useNewUrlParser: true })
+  .then(() => console.log('MongoDB Connected'))
+  .catch((err) => console.log(err));
 
 // EJS
 app.use(expressLayouts);
@@ -53,21 +53,20 @@ app.use(function (req, res, next) {
 // Routes
 app.use('/', require('./routes/index.js'));
 app.use('/users', require('./routes/users.js'));
-app.use('/resource',require('./routes/resource.js'));
+app.use('/resource', require('./routes/resource.js'));
 
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, console.log(`Server running on  ${PORT}`));
 
-
 // error middleware for custom error to help find the error
-app.use((err,req,res,next)=>{
-  const errorStatus=err.statusCode || 500;
-  const errorMessages=err.message || 'Something went wrong';
+app.use((err, req, res, next) => {
+  const errorStatus = err.statusCode || 500;
+  const errorMessages = err.message || 'Something went wrong';
   return res.status(errorStatus).json({
-      success:false,
-      status: errorStatus,
-      message:errorMessages,
-      stack:err.stack,
+    success: false,
+    status: errorStatus,
+    message: errorMessages,
+    stack: err.stack,
   });
 });
