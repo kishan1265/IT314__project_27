@@ -72,4 +72,14 @@ router.post('/event', function (req, res) {
   //console.log(req.user.name);
 });
 
+router.get(
+  '/feedback',
+  ensureAuthenticated,
+  (req, res) =>
+    res.render('user_feedback', {
+      user: req.user,
+    })
+  //console.log(req.user.name)
+);
+
 module.exports = router;
