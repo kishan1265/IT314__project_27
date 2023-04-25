@@ -1,26 +1,28 @@
 // function to set the active dot
 function check() {
-    var currentImg = $('.slider-img .active');
-    var imgNum = currentImg.index();
-    var dotNum = $('.dot').eq(imgNum);
-    dotNum.addClass('active').siblings().removeClass('active');
-
+  var currentImg = $('.slider-img .active');
+  var imgNum = currentImg.index();
+  var dotNum = $('.dot').eq(imgNum);
+  dotNum.addClass('active').siblings().removeClass('active');
 }
 
 //  function to set the silde show automatic
 var slideIndex = 0;
 
 function mySlider() {
-    var imgs = document.getElementsByClassName("item");
-    for (var i = 0; i < imgs.length; i++) {
-        imgs[i].classList.remove('active');
-    }
-    slideIndex++;
-    if (slideIndex > imgs.length) { slideIndex = 1 }
-    imgs[slideIndex - 1].classList.add("active");
+  var imgs = document.getElementsByClassName('item');
+  for (var i = 0; i < imgs.length; i++) {
+    imgs[i].classList.remove('active');
+  }
+  slideIndex++;
+  if (slideIndex > imgs.length) {
+    slideIndex = 1;
+  }
+  imgs[slideIndex - 1].classList.add('active');
 
-    check()
+  check();
 }
+
 let coursel = setInterval(mySlider, 5000);
 let imgHover = document.querySelector('.slider-img')
 imgHover.addEventListener("mouseover", function () {
@@ -81,3 +83,4 @@ $(document).ready(function () {
     });
 
 });
+
