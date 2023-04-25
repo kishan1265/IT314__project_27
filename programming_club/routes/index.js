@@ -82,4 +82,37 @@ router.get(
   //console.log(req.user.name)
 );
 
+router.post('/feedback', function (req, res) {
+  const { title, feedback } = req.body;
+  const email = req.user.email;
+  const name = req.user.name;
+
+  //console.log(email, title, name, feedback);
+
+  let errors = [];
+
+  if (!title || !feedback) {
+    errors.push({ msg: 'Please enter all fields' });
+  }
+
+  if (errors.length > 0) {
+    res.render('user_feedback', {
+      errors,
+      title,
+      feedback,
+    });
+  } else {
+    const newFeedback = new Feedback({
+      title,
+      email,
+      name,
+      feedback,
+    });
+    newFeedback.save().then((feedback) => {
+      req.flash('success_msg', 'Your feedback has been submitted');
+      res.redirect('/feedback');
+    });
+  }
+});
+
 module.exports = router;
