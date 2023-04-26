@@ -17,7 +17,7 @@ router.get(
   (req, res) => res.render('admin')
   //console.log(req.user)
 );
- 
+
 //get participate id
 router.get('/participate/:id', async function (req, res) {
   const event_id = req.params.id;
@@ -136,5 +136,31 @@ router.post('/add_admin', (req, res) => {
     });
   }
 });
+
+router.get(
+  '/dashboard',
+  isAdmin,
+  async (req, res) => {
+    const user_ict = await User.find();
+
+    const size = 6;
+    const vector = new Array(size).fill(0);
+    //console.log(vector); // [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+
+    //console.log(map);
+    //console.log(vector);
+
+    const new_vector = JSON.stringify(vector);
+    const new_year = JSON.stringify(year);
+
+    res.render('admin_dashboard', {
+      user: req.user,
+      programme_data: new_vector,
+      year_data: new_year,
+    });
+  }
+
+  //console.log(req.user)
+);
 
 module.exports = router;
