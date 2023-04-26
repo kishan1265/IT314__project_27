@@ -11,7 +11,14 @@ router.use(bodyParser.json({ type: 'application/json' }));
 //Load User model
 const User = require('../models/User');
 
-//get paticipate ID
+//get for admin login
+router.get(
+  '/',
+  (req, res) => res.render('admin')
+  //console.log(req.user)
+);
+ 
+//get participate id
 router.get('/participate/:id', async function (req, res) {
   const event_id = req.params.id;
 
@@ -25,10 +32,3 @@ router.get('/participate/:id', async function (req, res) {
     user_name: req.user.name,
   });
 });
-
-//get for admin login
-router.get(
-  '/',
-  (req, res) => res.render('admin')
-  //console.log(req.user)
-);
