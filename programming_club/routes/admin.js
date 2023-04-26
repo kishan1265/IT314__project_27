@@ -45,6 +45,15 @@ router.post('/delete_event', (req, res) => {
   });
 });
 
+//get add admin
+router.get('/add_admin', isAdmin, (req, res) =>
+  res.render('add_admin', { user: req.user })
+);
+
+//get delete admin
+router.get('/delete_admin', isAdmin, (req, res) =>
+  res.render('delete_admin', { user: req.user })
+);
 
 //post for admin login
 router.post('/', (req, res, next) => {
