@@ -69,27 +69,32 @@ module.exports.compose_get = async (req, res, next) => {
 // post compose
 module.exports.compose_post = async (req, res, next) => {
   let errors = [];
-  const { title, markdown, description } = req.body;
+  const { title, description,link } = req.body;
   if (!title) {
     errors.push({ msg: 'Please enter the title' });
   }
-  if (!description) {
-    errors.push({ msg: 'Please enter the description' });
+  if (!link) {
+    errors.push({ msg: 'Please enter the link' });
   }
   try {
-    // const {title,markdown,description}=req.body;
-    const newResource = new resourcedb({
-      title: req.body.title,
-      description: req.body.description,
-      link: req.body.link,
-      // markdown:req.body.markdown,
-      // username:username,
-      // catagories:catagories,
-    });
-    const savedResource = await newResource.save();
-    if (savedResource) {
-      req.flash('success_msg', 'Resource added successfully');
-      res.redirect('/admin/resource');
+    if(errors.length>0){
+      res.render('../views/resource/compose', {
+        errors,
+        title,
+        description,
+        link,
+      });
+    } else {
+      const newResource = new resourcedb({
+        title: req.body.title,
+        description: req.body.description,
+        link: req.body.link,
+      });
+      const savedResource = await newResource.save();
+      if (savedResource) {
+        req.flash('success_msg', 'Resource added successfully');
+        res.redirect('/admin/resource');
+      }
     }
   } catch (error) {
     res.send('There was an error in saving your resource. Please try again.');
