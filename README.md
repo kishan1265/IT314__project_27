@@ -41,3 +41,5 @@ The list of available lab submissions are as follows:
 * ***Lab-4:*** Finalized the tools, frameworks, and technologies to be used for the project. Effort estimation using use case size point (USP).
 
 * ***Lab-6:*** Identified the design goals, entity objects, boundary objects, and control objects. Developed domain analysis model, sequence diagram, class diagram, and high-level system design.
+
+* ***Lab-8:*** This likely involved creating test cases to ensure that the email verification functionality works correctly also involved testing the functionality of the server-side code that handles POST requests for creating events.
