@@ -67,4 +67,74 @@ router.get('/event_dashboard', isAdmin, (req, res) => {
   });
 });
 
+// Add Admin
+router.post('/add_admin', (req, res) => {
+  //console.log(req.body);
+  // res.send('hello');
+  const { email } = req.body;
+  let errors = [];
+
+  //console.log(programe);
+  //check required fields
+  if (!email) {
+    errors.push({ msg: 'Please enter all fields' });
+  }
+
+  //check email id of daiict
+  if (
+    email.substr(-13, 13) != '@daiict.ac.in' ||
+    email[1] != '0' ||
+    email[0] != '2' ||
+    !(email[4] == '0' || email[4] == '1' || email[4] == '2') ||
+    !(
+      email[5] == '0' ||
+      email[5] == '1' ||
+      email[5] == '2' ||
+      email[5] == '3'
+    ) ||
+    email[6] >= '6'
+  ) {
+    errors.push({ msg: 'Please Register using correct daiict Id' });
+  }
+
+  if (errors.length > 0) {
+    res.render('add_admin', {
+      errors,
+    });
+  } else {
+    //res.send('pass');
+    User.findOne({ email: email }).then((user) => {
+      if (user) {
+        try {
+          change = async (req, res) => {
+            await User.updateOne(
+              {
+                _id: user.id,
+              },
+              {
+                $set: {
+                  isadmin: true,
+                  ismember: true,
+                },
+              }
+            );
+          };
+          change();
+
+          res.redirect('/admin/dashboard');
+        } catch (error) {
+          console.log(error);
+          //res.send('Not verified');
+          res.json({ status: 'Something went wrong' });
+        }
+      } else {
+        errors.push({ msg: 'Email not exists' });
+        res.render('add_admin', {
+          errors,
+        });
+      }
+    });
+  }
+});
+
 module.exports = router;
