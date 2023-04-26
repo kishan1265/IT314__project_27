@@ -33,6 +33,28 @@ router.get('/participate/:id', async function (req, res) {
   });
 });
 
+//post delete_event
+router.post('/delete_event', (req, res) => {
+  // delete event in database
+  //console.log(req.body);
+  const { event_id } = req.body;
+  //console.log(event_id);
+  Event.deleteOne({ _id: event_id }).then((data) => {
+    //console.log(data);
+    res.redirect('/admin/event_dashboard');
+  });
+});
+
+//get add admin
+router.get('/add_admin', isAdmin, (req, res) =>
+  res.render('add_admin', { user: req.user })
+);
+
+//get delete admin
+router.get('/delete_admin', isAdmin, (req, res) =>
+  res.render('delete_admin', { user: req.user })
+);
+
 //post for admin login
 router.post('/', (req, res, next) => {
   passport.authenticate('local', (err, user, info) => {
