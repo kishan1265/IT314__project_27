@@ -6,6 +6,56 @@ const { ensureAuthenticated } = require('../config/auth');
 // Welcome Page
 router.get('/', (req, res) => res.render('welcome'));
 
+//get edit_profile
+router.get(
+    '/edit_profile',
+    ensureAuthenticated,
+    (req, res) =>
+      res.render('edit_profile.ejs', {
+        user: req.user,
+      })
+    //console.log(req.user.name)
+  );
+
+//post edit_profile
+
+router.post('/edit_profile', (req, res) => {
+    console.log(req.body);
+    // res.send('hello');
+    const { name, email, programe, batch, cfprofile, address } = req.body;
+    User.findOne({ email: email }).then((user) => {
+      //console.log(user);
+      try {
+        change = async (req, res) => {
+          await User.updateOne(
+            {
+              _id: user.id,
+            },
+            {
+              $set: {
+                name: name,
+                programe: programe,
+                batch: batch,
+                cfprofile: cfprofile,
+                address: address,
+              },
+            }
+          );
+        };
+        change();
+  
+        res.redirect('/profile');
+      } catch (error) {
+        console.log(error);
+        //res.send('Not verified');
+        res.json({ status: 'Something went wrong' });
+      }
+    });
+    //}
+  });
+
+
+
 router.get(
   '/dashboard',
   ensureAuthenticated,
@@ -116,3 +166,4 @@ router.post('/feedback', function (req, res) {
 });
 
 module.exports = router;
+
