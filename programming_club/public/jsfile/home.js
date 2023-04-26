@@ -10,6 +10,7 @@ function Today() {
     'date'
   ).innerHTML = `${day}, ${month} ${date}, ${year}`;
 }
+
 function check() {
   var currentImg = $('.slider-img .active');
   var imgNum = currentImg.index();
@@ -87,3 +88,4 @@ $(document).ready(function () {
 });
 
 Today();
+
