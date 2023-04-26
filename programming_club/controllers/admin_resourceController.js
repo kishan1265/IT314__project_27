@@ -79,7 +79,6 @@ module.exports.compose_post = async (req, res, next) => {
   try {
     // const {title,markdown,description}=req.body;
     const newResource = new resourcedb({
-      errors,
       title: req.body.title,
       description: req.body.description,
       link: req.body.link,
