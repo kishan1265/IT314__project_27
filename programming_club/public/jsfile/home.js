@@ -10,8 +10,12 @@
 
     document.getElementById('day').innerHTML = `${date}`;
     document.getElementById('month').innerHTML = `${month}, ${year}`;  
+    
+    document.getElementById(
+    'date'
+  ).innerHTML = `${day}, ${month} ${date}, ${year}`;
 
-  }  
+ }  
 
   Today();
 
