@@ -57,4 +57,14 @@ router.post('/', (req, res, next) => {
   })(req, res, next);
 });
 
+router.get('/event_dashboard', isAdmin, (req, res) => {
+  Event.find().then((data) => {
+    //console.log(data);
+    res.render('event_dashboard', {
+      user: req.user,
+      events: data,
+    });
+  });
+});
+
 module.exports = router;
