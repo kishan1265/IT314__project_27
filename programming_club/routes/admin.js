@@ -17,7 +17,7 @@ router.get(
   (req, res) => res.render('admin')
   //console.log(req.user)
 );
- 
+
 //get participate id
 router.get('/participate/:id', async function (req, res) {
   const event_id = req.params.id;
@@ -32,6 +32,28 @@ router.get('/participate/:id', async function (req, res) {
     user_name: req.user.name,
   });
 });
+
+//post delete_event
+router.post('/delete_event', (req, res) => {
+  // delete event in database
+  //console.log(req.body);
+  const { event_id } = req.body;
+  //console.log(event_id);
+  Event.deleteOne({ _id: event_id }).then((data) => {
+    //console.log(data);
+    res.redirect('/admin/event_dashboard');
+  });
+});
+
+//get add admin
+router.get('/add_admin', isAdmin, (req, res) =>
+  res.render('add_admin', { user: req.user })
+);
+
+//get delete admin
+router.get('/delete_admin', isAdmin, (req, res) =>
+  res.render('delete_admin', { user: req.user })
+);
 
 //post for admin login
 router.post('/', (req, res, next) => {
@@ -136,5 +158,31 @@ router.post('/add_admin', (req, res) => {
     });
   }
 });
+
+router.get(
+  '/dashboard',
+  isAdmin,
+  async (req, res) => {
+    const user_ict = await User.find();
+
+    const size = 6;
+    const vector = new Array(size).fill(0);
+    //console.log(vector); // [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+
+    //console.log(map);
+    //console.log(vector);
+
+    const new_vector = JSON.stringify(vector);
+    const new_year = JSON.stringify(year);
+
+    res.render('admin_dashboard', {
+      user: req.user,
+      programme_data: new_vector,
+      year_data: new_year,
+    });
+  }
+
+  //console.log(req.user)
+);
 
 module.exports = router;
