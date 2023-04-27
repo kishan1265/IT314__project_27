@@ -18,6 +18,29 @@ router.get(
   //console.log(req.user)
 );
 
+//get feedback
+router.get('/feedback', isAdmin, (req, res) => {
+  Feedback.find().then((data) => {
+    //console.log(data);
+    res.render('admin_feedback', {
+      user: req.user,
+      feedbacks: data,
+    });
+  });
+});
+
+//post feedback
+router.post('/feedback', (req, res) => {
+  // delete event in database
+  //console.log(req.body);
+  const { query_id } = req.body;
+  //console.log(event_id);
+  Feedback.deleteOne({ _id: query_id }).then((data) => {
+    //console.log(data);
+    res.redirect('/feedback');
+  });
+});
+
 //get participate id
 router.get('/participate/:id', async function (req, res) {
   const event_id = req.params.id;
