@@ -262,6 +262,37 @@ router.get(
     const vector = new Array(size).fill(0);
     //console.log(vector); // [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
+    for (let i = 0; i < user_ict.length; i++) {
+      if (user_ict[i].programe == 'B.Tech - ICT') {
+        vector[0] += 1;
+      } else if (user_ict[i].programe == 'B.Tech - ICT (CS)') {
+        vector[1] += 1;
+      } else if (user_ict[i].programe == 'B.Tech - MNC') {
+        vector[2] += 1;
+      } else if (user_ict[i].programe == 'MscIT') {
+        vector[3] += 1;
+      } else if (user_ict[i].programe == 'M.Tech - ML') {
+        vector[4] += 1;
+      } else if (user_ict[i].programe == 'M.Tech - Data Science') {
+        vector[5] += 1;
+      }
+    }
+
+    const year = new Array(4).fill(0);
+    //console.log(vector); // [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+
+    for (let i = 0; i < user_ict.length; i++) {
+      if (user_ict[i].batch == '1st Year') {
+        year[0] += 1;
+      } else if (user_ict[i].batch == '2nd Year') {
+        year[1] += 1;
+      } else if (user_ict[i].batch == '3rd Year') {
+        year[2] += 1;
+      } else if (user_ict[i].batch == '4rd Year') {
+        year[3] += 1;
+      }
+    }
+
     //console.log(map);
     //console.log(vector);
 
@@ -277,5 +308,62 @@ router.get(
 
   //console.log(req.user)
 );
+
+// Add Event
+router.post('/event', (req, res) => {
+  //console.log(req.body);
+  // res.send('hello');
+  const { name, date, duration, venue, description } = req.body;
+  let errors = [];
+
+  //console.log(programe);
+  //check required fields
+  if (!name || !date || !duration || !venue) {
+    errors.push({ msg: 'Please enter all fields' });
+  }
+
+  //check date and time
+  var date1 = new Date(date);
+  var date2 = new Date();
+  if (date1 < date2) {
+    errors.push({ msg: 'Please enter valid date and time' });
+  }
+
+  //check duration
+  if (duration < 0) {
+    errors.push({ msg: 'Please enter valid duration' });
+  }
+
+  if (errors.length > 0) {
+    res.render('manage_event', {
+      errors,
+      name,
+      date,
+      duration,
+      venue,
+      description,
+    });
+  } else {
+    //res.send('pass');
+
+    const newEvent = new Event({
+      name,
+      date,
+      duration,
+      venue,
+      description,
+    });
+
+    newEvent
+      .save()
+      .then((event) => {
+        req.flash('success_msg', 'Event added successfully');
+        res.redirect('/admin/event');
+      })
+      .catch((err) => console.log(err));
+    // console.log(newUser);
+    // res.send('hello');
+  }
+});
 
 module.exports = router;
