@@ -3,9 +3,7 @@ const resourcedb = require('../models/resource.js');
 // const Categorydb = require('../models/Category.js');
 const User = require('../models/User.js');
 const { createError } = require('../custom_error/error.js');
-// const pdfjsLib = require('pdfjs-dist');
-// const Categoryd = require('../views/resource/resource_home');
-// const is_admin=require('../config/auth.js').isAdmin;
+
 
 const express = require('express');
 const pdfjsLib = require('pdfjs-dist');
@@ -139,7 +137,7 @@ module.exports.compose_update = async (req, res, next) => {
       res.redirect('/admin/resource');
     }
   } catch (error) {
-    res.send('There was an error. Please try again.');
+    res.send('There was an error in updating the Resource. Please try again.');
   }
 };
 
@@ -153,6 +151,6 @@ module.exports.compose_delete = async (req, res, next) => {
       res.redirect('/admin/resource');
     }
   } catch (error) {
-    res.send('There was an error. Please try again.');
+    res.send('There was an error in deleting the Resource. Please try again.');
   }
 };
