@@ -1,6 +1,6 @@
 const request = require('supertest');
 
-const baseURL = 'http://localhost:5000';
+const baseURL = 'https://programming-club-daiict.up.railway.app';
 
 describe('GET /', () => {
   test('should return status 200 for welcome page', async () => {
