@@ -5,10 +5,6 @@ const User = require('../models/User.js');
 const { createError } = require('../custom_error/error.js');
 
 
-const express = require('express');
-const pdfjsLib = require('pdfjs-dist');
-const app = express();
-
 // app.get('/pdf', (req, res) => {
 //   const url = 'https://www.example.com/path/to/your.pdf';
 //   pdfjsLib.getDocument(url).promise.then(doc => {
