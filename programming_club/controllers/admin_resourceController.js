@@ -4,8 +4,6 @@ const resourcedb = require('../models/resource.js');
 const User = require('../models/User.js');
 const { createError } = require('../custom_error/error.js');
 
-
-
 module.exports.Resource_get_all = async (req, res, next) => {
   try {
     const resources = await resourcedb.find();
