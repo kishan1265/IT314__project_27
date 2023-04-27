@@ -311,4 +311,61 @@ router.get(
   //console.log(req.user)
 );
 
+// Add Event
+router.post('/event', (req, res) => {
+  //console.log(req.body);
+  // res.send('hello');
+  const { name, date, duration, venue, description } = req.body;
+  let errors = [];
+
+  //console.log(programe);
+  //check required fields
+  if (!name || !date || !duration || !venue) {
+    errors.push({ msg: 'Please enter all fields' });
+  }
+
+  //check date and time
+  var date1 = new Date(date);
+  var date2 = new Date();
+  if (date1 < date2) {
+    errors.push({ msg: 'Please enter valid date and time' });
+  }
+
+  //check duration
+  if (duration < 0) {
+    errors.push({ msg: 'Please enter valid duration' });
+  }
+
+  if (errors.length > 0) {
+    res.render('manage_event', {
+      errors,
+      name,
+      date,
+      duration,
+      venue,
+      description,
+    });
+  } else {
+    //res.send('pass');
+
+    const newEvent = new Event({
+      name,
+      date,
+      duration,
+      venue,
+      description,
+    });
+
+    newEvent
+      .save()
+      .then((event) => {
+        req.flash('success_msg', 'Event added successfully');
+        res.redirect('/admin/event');
+      })
+      .catch((err) => console.log(err));
+    // console.log(newUser);
+    // res.send('hello');
+  }
+});
+
 module.exports = router;
