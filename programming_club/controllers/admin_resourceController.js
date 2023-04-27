@@ -4,27 +4,6 @@ const resourcedb = require('../models/resource.js');
 const User = require('../models/User.js');
 const { createError } = require('../custom_error/error.js');
 
-
-const express = require('express');
-const pdfjsLib = require('pdfjs-dist');
-const app = express();
-
-// app.get('/pdf', (req, res) => {
-//   const url = 'https://www.example.com/path/to/your.pdf';
-//   pdfjsLib.getDocument(url).promise.then(doc => {
-//     const totalPages = doc.numPages;
-//     res.render('pdf-viewer', { pdfUrl: url, totalPages });
-//   }).catch(error => {
-//     console.log(error);
-//     res.send('Error');
-//   });
-// });
-// module.exports.Resource_get_one_pdf=async(req,res,next)=>{
-
-//   res.render("../views/resource/pdf-viewer.ejs",{
-//     pdfUrl: req.params.id,
-// });
-// };
 module.exports.Resource_get_all = async (req, res, next) => {
   try {
     const resources = await resourcedb.find();
