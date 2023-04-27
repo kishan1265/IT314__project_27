@@ -18,6 +18,29 @@ router.get(
   //console.log(req.user)
 );
 
+//get feedback
+router.get('/feedback', isAdmin, (req, res) => {
+  Feedback.find().then((data) => {
+    //console.log(data);
+    res.render('admin_feedback', {
+      user: req.user,
+      feedbacks: data,
+    });
+  });
+});
+
+//post feedback
+router.post('/feedback', (req, res) => {
+  // delete event in database
+  //console.log(req.body);
+  const { query_id } = req.body;
+  //console.log(event_id);
+  Feedback.deleteOne({ _id: query_id }).then((data) => {
+    //console.log(data);
+    res.redirect('/feedback');
+  });
+});
+
 //get participate id
 router.get('/participate/:id', async function (req, res) {
   const event_id = req.params.id;
@@ -238,6 +261,37 @@ router.get(
     const size = 6;
     const vector = new Array(size).fill(0);
     //console.log(vector); // [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+
+    for (let i = 0; i < user_ict.length; i++) {
+      if (user_ict[i].programe == 'B.Tech - ICT') {
+        vector[0] += 1;
+      } else if (user_ict[i].programe == 'B.Tech - ICT (CS)') {
+        vector[1] += 1;
+      } else if (user_ict[i].programe == 'B.Tech - MNC') {
+        vector[2] += 1;
+      } else if (user_ict[i].programe == 'MscIT') {
+        vector[3] += 1;
+      } else if (user_ict[i].programe == 'M.Tech - ML') {
+        vector[4] += 1;
+      } else if (user_ict[i].programe == 'M.Tech - Data Science') {
+        vector[5] += 1;
+      }
+    }
+
+    const year = new Array(4).fill(0);
+    //console.log(vector); // [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+
+    for (let i = 0; i < user_ict.length; i++) {
+      if (user_ict[i].batch == '1st Year') {
+        year[0] += 1;
+      } else if (user_ict[i].batch == '2nd Year') {
+        year[1] += 1;
+      } else if (user_ict[i].batch == '3rd Year') {
+        year[2] += 1;
+      } else if (user_ict[i].batch == '4rd Year') {
+        year[3] += 1;
+      }
+    }
 
     //console.log(map);
     //console.log(vector);
