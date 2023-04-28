@@ -184,4 +184,44 @@ router.post('/feedback', function (req, res) {
   }
 });
 
+router.post('/event/deregister', function (req, res) {
+  //console.log(req.body.event_id);
+  const event_id = req.body.event_id;
+  const user_id = req.body.user_id;
+
+  let participantsexist = true;
+
+  Event.findOne({ _id: event_id }).then((event) => {
+    if (event.participants.includes(user_id)) {
+      Event.findByIdAndUpdate(
+        event_id,
+        {
+          $pull: { participants: user_id },
+        },
+        {
+          new: true, // Return the updated event object
+        }
+      );
+    } else {
+      participantsexist = false;
+    }
+  });
+
+  if (participantsexist == 0) {
+    req.flash('error_msg', 'You have not registered for this event');
+    res.redirect('/event');
+  } else {
+    req.flash(
+      'success_msg',
+      'You have successfully deregistered for the event'
+    );
+    res.redirect('/event');
+  }
+
+  //res.redirect('/event');
+  //res.status(200).json({ status: 'success' });
+  //alert('You have successfully registered for the event <%= event.name %>');
+  //console.log(req.user.name);
+});
+
 module.exports = router;
