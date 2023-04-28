@@ -56,6 +56,17 @@ router.get('/participate/:id', async function (req, res) {
   });
 });
 
+//get event
+router.get(
+  '/event',
+  isAdmin,
+  (req, res) =>
+    res.render('manage_event', {
+      user: req.user,
+    })
+  //console.log(req.user)
+);
+
 //post delete_event
 router.post('/delete_event', (req, res) => {
   // delete event in database
@@ -251,6 +262,8 @@ router.post('/delete_admin', (req, res) => {
     });
   }
 });
+
+
 
 router.get(
   '/dashboard',
