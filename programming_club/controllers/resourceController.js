@@ -1,6 +1,6 @@
 // export the model
 const Resourcedb = require('../models/resource.js');
-const Categorydb = require('../models/Category.js');
+const User = require('../models/User.js');
 const { createError } = require('../custom_error/error.js');
 
 //get request
@@ -9,33 +9,23 @@ const { createError } = require('../custom_error/error.js');
 module.exports.Resource_get_all = async (req, res, next) => {
   try {
     const resource = await Resourcedb.find();
-    if (!resource) {
-      return next(createError(400, 'Resource not found'));
-    }
-    res.status(200).json({
-      status: 'success',
-      data: resource,
+    resource.sort((a, b) => {
+      return new String(b.title).localeCompare(a.title);
     });
+    if (req.isAuthenticated()) {
+      const foundUser = await User.findById(req.user._id);
+      if (foundUser) {
+        res.render('../views/resource/resource_home.ejs', {
+          userid: foundUser._id,
+          backend_resources: resource,
+          is_admin: foundUser.isadmin,
+          is_member: foundUser.ismember,
+        });
+      } else{
+        res.send('user is not authenticated. Please try again.');
+      }
+    }
   } catch (err) {
-    next(err);
+    res.send('There was an error in loading resource. Please try again.');
   }
 };
-
-//post request
-module.exports.Resource_post = async (req, res, next) => {
-  try {
-    const resource = await Resourcedb.create(req.body);
-    if (!resource) {
-      return next(createError(400, 'Resource not created'));
-    }
-    res.status(200).json({
-      status: 'success',
-      data: resource,
-    });
-  } catch (err) {
-    next(err);
-  }
-};
-
-//put request
-// delete request
