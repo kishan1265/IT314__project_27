@@ -7,6 +7,9 @@ const passport = require('passport');
 
 const app = express();
 
+// config .env file
+require('dotenv').config();
+
 // DB Config
 const db = require('./config/keys').MongoURI;
 
@@ -14,10 +17,10 @@ const db = require('./config/keys').MongoURI;
 require('./config/passport')(passport);
 
 // Connect to MongoDB
-mongoose
-  .connect(db, { useNewUrlParser: true })
-  .then(() => console.log('MongoDB Connected'))
-  .catch((err) => console.log(err));
+// mongoose
+//   .connect(db, { useNewUrlParser: true })
+//   .then(() => console.log('MongoDB Connected'))
+//   .catch((err) => console.log(err));
 
 // EJS
 app.use(expressLayouts);
@@ -32,12 +35,18 @@ app.use(
     secret: 'secret',
     resave: true,
     saveUninitialized: true,
+    cookie: { maxAge: 1000 * 60 * 60 * 24 },
   })
 );
 
 // Passport middleware
 app.use(passport.initialize());
 app.use(passport.session());
+app.use((req, res, next) => {
+  //console.log(req.session);
+  //console.log('req.user', req.user);
+  next();
+});
 
 // Connect flash
 app.use(flash());
@@ -53,8 +62,15 @@ app.use(function (req, res, next) {
 // Routes
 app.use('/', require('./routes/index.js'));
 app.use('/users', require('./routes/users.js'));
+app.use('/admin', require('./routes/admin.js'));
 app.use('/resource', require('./routes/resource.js'));
+app.use('/admin/resource', require('./routes/admin_resource.js'));
 
+// bad request handling
+app.all('*', (req, res) => {
+  res.status(404).send('<h1>404 Page not found</h1>');
+  next();
+});
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, console.log(`Server running on  ${PORT}`));
@@ -70,3 +86,5 @@ app.use((err, req, res, next) => {
     stack: err.stack,
   });
 });
+
+module.exports = app;

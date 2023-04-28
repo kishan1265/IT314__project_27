@@ -13,7 +13,7 @@ module.exports.Resource_get_all = async (req, res, next) => {
       return new String(b.title).localeCompare(a.title);
     });
     if (req.isAuthenticated()) {
-      const foundUser = await User.findById(req.user.id);
+      const foundUser = await User.findById(req.user._id);
       if (foundUser) {
         res.render('../views/resource/resource_home.ejs', {
           userid: foundUser._id,
