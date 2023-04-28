@@ -10,6 +10,8 @@ router.use(bodyParser.json({ type: 'application/json' }));
 
 //Load User model
 const User = require('../models/User');
+const Event = require('../models/Event');
+const Feedback = require('../models/Feedback');
 
 //get for admin login
 router.get(
@@ -56,6 +58,17 @@ router.get('/participate/:id', async function (req, res) {
   });
 });
 
+//get event
+router.get(
+  '/event',
+  isAdmin,
+  (req, res) =>
+    res.render('manage_event', {
+      user: req.user,
+    })
+  //console.log(req.user)
+);
+
 //post delete_event
 router.post('/delete_event', (req, res) => {
   // delete event in database
@@ -101,6 +114,23 @@ router.post('/', (req, res, next) => {
     });
   })(req, res, next);
 });
+
+//get admin/user
+router.get(
+  '/user',
+  isAdmin,
+  async (req, res) => {
+    const users = await User.find();
+    users.sort((a, b) => {
+      return new String(a.email).localeCompare(b.email);
+    });
+    res.render('user_data', {
+      user: req.user,
+      user_data: users,
+    });
+  }
+);
+
 
 router.get('/event_dashboard', isAdmin, (req, res) => {
   Event.find().then((data) => {
@@ -258,7 +288,7 @@ router.get(
   async (req, res) => {
     const user_ict = await User.find();
 
-    const size = 6;
+    const size = 4;
     const vector = new Array(size).fill(0);
     //console.log(vector); // [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
@@ -269,12 +299,8 @@ router.get(
         vector[1] += 1;
       } else if (user_ict[i].programe == 'B.Tech - MNC') {
         vector[2] += 1;
-      } else if (user_ict[i].programe == 'MscIT') {
-        vector[3] += 1;
-      } else if (user_ict[i].programe == 'M.Tech - ML') {
-        vector[4] += 1;
-      } else if (user_ict[i].programe == 'M.Tech - Data Science') {
-        vector[5] += 1;
+      } else if (user_ict[i].programe == 'B.Tech - ICT (RAS))') {
+        vector[1] += 1;
       }
     }
 
@@ -308,5 +334,62 @@ router.get(
 
   //console.log(req.user)
 );
+
+// Add Event
+router.post('/event', (req, res) => {
+  //console.log(req.body);
+  // res.send('hello');
+  const { name, date, duration, venue, description } = req.body;
+  let errors = [];
+
+  //console.log(programe);
+  //check required fields
+  if (!name || !date || !duration || !venue) {
+    errors.push({ msg: 'Please enter all fields' });
+  }
+
+  //check date and time
+  var date1 = new Date(date);
+  var date2 = new Date();
+  if (date1 < date2) {
+    errors.push({ msg: 'Please enter valid date and time' });
+  }
+
+  //check duration
+  if (duration < 0) {
+    errors.push({ msg: 'Please enter valid duration' });
+  }
+
+  if (errors.length > 0) {
+    res.render('manage_event', {
+      errors,
+      name,
+      date,
+      duration,
+      venue,
+      description,
+    });
+  } else {
+    //res.send('pass');
+
+    const newEvent = new Event({
+      name,
+      date,
+      duration,
+      venue,
+      description,
+    });
+
+    newEvent
+      .save()
+      .then((event) => {
+        req.flash('success_msg', 'Event added successfully');
+        res.redirect('/admin/event');
+      })
+      .catch((err) => console.log(err));
+    // console.log(newUser);
+    // res.send('hello');
+  }
+});
 
 module.exports = router;

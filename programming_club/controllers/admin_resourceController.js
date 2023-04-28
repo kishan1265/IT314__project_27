@@ -10,8 +10,9 @@ module.exports.Resource_get_all = async (req, res, next) => {
     resources.sort((a, b) => {
       return String(b.title).localeCompare(a.title);
     });
-    if (req.isAuthenticated() && req.user.isadmin) {
-      const foundUser = await User.findById(req.user.id);
+    if (req.user.isadmin) {
+      const foundUser = await User.findById(req.user._id);
+      // console.log(req.user._id);
       if (foundUser) {
         // res.render("../views/resource/resource_home", {
         //   newPost: resources,
@@ -24,11 +25,14 @@ module.exports.Resource_get_all = async (req, res, next) => {
           is_admin: foundUser.isadmin,
           is_member: foundUser.ismember,
           //authenticated: req.isAuthenticated(),
-          userLikedPosts: foundUser.likedPosts,
+          // userLikedPosts: foundUser.likedPosts,
         });
       } else {
-        res.send('user is not authenticated. Please try again.');
+        res.send('user is not found. Please try again.');
       }
+    }
+    else{
+      res.send('user is not authenticated. Please try again.');
     }
   } catch (error) {
     res.send('There was an error in loading resource. Please try again.');
@@ -100,10 +104,21 @@ module.exports.compose_update_get = async (req, res, next) => {
 module.exports.compose_update = async (req, res, next) => {
   try {
     // const {title,markdown,description}=req.body;
+    const existingResource = await resourcedb.findById(req.params.id);
+    
+    if (
+      req.body.title === existingResource.title &&
+      req.body.description === existingResource.description &&
+      req.body.link === existingResource.link
+    ) {
+      // No changes to update
+      return res.redirect('/admin/resource');
+    }
     const updatedResource = await resourcedb.findByIdAndUpdate(
       req.params.id,
       {
         $set: {
+
           title: req.body.title,
           description: req.body.description,
           link: req.body.link,

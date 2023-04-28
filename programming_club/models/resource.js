@@ -1,7 +1,6 @@
 // export mongoose model
 const mongoose = require('mongoose');
-// const conn = require('../db/connectdb.js').connectdb;
-
+const conn = require('../db/connectdb.js').connectdb;
 
 const ResourceSchema = new mongoose.Schema(
   {
@@ -11,11 +10,6 @@ const ResourceSchema = new mongoose.Schema(
       trim: true,
       maxlength: [100, 'resource title cannot exceed 100 characters'],
     },
-    // markdown: {
-    //     type: String,
-    //     required: false,
-
-    // },
     description: {
       type: String,
       required: true,
@@ -25,7 +19,6 @@ const ResourceSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-
     // likes: {
     //     type: Number,
     //     required: false,
@@ -51,6 +44,6 @@ const ResourceSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-const resourcedb = mongoose.model('ResourceSchema', ResourceSchema);
+const resourcedb = conn.model('ResourceSchema', ResourceSchema);
 
 module.exports = resourcedb;
