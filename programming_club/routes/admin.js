@@ -10,6 +10,8 @@ router.use(bodyParser.json({ type: 'application/json' }));
 
 //Load User model
 const User = require('../models/User');
+const Event = require('../models/Event');
+const Feedback = require('../models/Feedback');
 
 //get for admin login
 router.get(
@@ -262,8 +264,6 @@ router.post('/delete_admin', (req, res) => {
     });
   }
 });
-
-
 
 router.get(
   '/dashboard',
