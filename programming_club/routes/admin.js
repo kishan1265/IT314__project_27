@@ -115,6 +115,23 @@ router.post('/', (req, res, next) => {
   })(req, res, next);
 });
 
+//get admin/user
+router.get(
+  '/user',
+  isAdmin,
+  async (req, res) => {
+    const users = await User.find();
+    users.sort((a, b) => {
+      return new String(a.email).localeCompare(b.email);
+    });
+    res.render('user_data', {
+      user: req.user,
+      user_data: users,
+    });
+  }
+);
+
+
 router.get('/event_dashboard', isAdmin, (req, res) => {
   Event.find().then((data) => {
     //console.log(data);
