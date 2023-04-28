@@ -6,7 +6,7 @@ const is_admin=require('../config/auth.js').isAdmin;
 
 // router.get("/:id",recourseController.Resource_get);
 // see all resource
-router.get("/",admin_recourseController.Resource_get_all);
+router.get("/",is_admin,admin_recourseController.Resource_get_all);
 
 // write/compose the resource
 router.get("/compose",is_admin,admin_recourseController.compose_get);
