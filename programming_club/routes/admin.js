@@ -115,6 +115,18 @@ router.post('/', (req, res, next) => {
   })(req, res, next);
 });
 
+//get admin/user
+router.get('/user', isAdmin, async (req, res) => {
+  const users = await User.find();
+  users.sort((a, b) => {
+    return new String(a.email).localeCompare(b.email);
+  });
+  res.render('user_data', {
+    user: req.user,
+    user_data: users,
+  });
+});
+
 router.get('/event_dashboard', isAdmin, (req, res) => {
   Event.find().then((data) => {
     //console.log(data);
@@ -370,6 +382,101 @@ router.post('/event', (req, res) => {
         res.redirect('/admin/event');
       })
       .catch((err) => console.log(err));
+    // console.log(newUser);
+    // res.send('hello');
+  }
+});
+
+router.get(
+  '/admin_dashboard',
+  isAdmin,
+  async (req, res) => {
+    const users = await User.find();
+    users.sort((a, b) => {
+      return new String(a.email).localeCompare(b.email);
+      // new String(a.programe).localeCompare(b.programe) &&
+      // new String(a.email).localeCompare(b.email)
+    });
+    res.render('admin_data', {
+      user: req.user,
+      admin_data: users,
+    });
+    // User.find().then((data) => {
+    //   //console.log(data);
+    //   res.render('user_data', {
+    //     user: req.user,
+    //     user_data: data,
+    //   });
+    // });
+  }
+  //console.log(req.user)
+);
+
+router.get('/edit_event/:id', async (req, res) => {
+  const { id } = req.params;
+
+  await Event.findOne({ _id: id }).then((data) => {
+    //console.log(data);
+    res.render('edit_event', {
+      user: req.user,
+      id: data._id,
+      name: data.name,
+      date: data.date,
+      description: data.description,
+      duration: data.duration,
+      venue: data.venue,
+    });
+  });
+});
+
+router.post('/edit_event/:id', (req, res) => {
+  const { id } = req.params;
+  const { name, date, description, duration, venue } = req.body;
+
+  let errors = [];
+
+  //console.log(programe);
+  //check required fields
+  if (!name || !date || !duration || !venue) {
+    errors.push({ msg: 'Please enter all fields' });
+  }
+
+  //check date and time
+  var date1 = new Date(date);
+  var date2 = new Date();
+  if (date1 < date2) {
+    errors.push({ msg: 'Please enter valid date and time' });
+  }
+
+  //check duration
+  if (duration < 0) {
+    errors.push({ msg: 'Please enter valid duration' });
+  }
+
+  if (errors.length > 0) {
+    res.render('edit_event', {
+      errors,
+      name,
+      date,
+      duration,
+      venue,
+      description,
+    });
+  } else {
+    //res.send('pass');
+
+    Event.findOne({ _id: id }).then((data) => {
+      data.name = name;
+      data.date = date;
+      data.duration = duration;
+      data.venue = venue;
+      data.description = description;
+
+      data.save().then((data) => {
+        req.flash('success_msg', 'Event Updated');
+        res.redirect('/admin/event_dashboard');
+      });
+    });
     // console.log(newUser);
     // res.send('hello');
   }
