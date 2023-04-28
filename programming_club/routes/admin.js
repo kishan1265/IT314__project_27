@@ -258,7 +258,7 @@ router.get(
   async (req, res) => {
     const user_ict = await User.find();
 
-    const size = 6;
+    const size = 4;
     const vector = new Array(size).fill(0);
     //console.log(vector); // [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
@@ -269,12 +269,8 @@ router.get(
         vector[1] += 1;
       } else if (user_ict[i].programe == 'B.Tech - MNC') {
         vector[2] += 1;
-      } else if (user_ict[i].programe == 'MscIT') {
-        vector[3] += 1;
-      } else if (user_ict[i].programe == 'M.Tech - ML') {
-        vector[4] += 1;
-      } else if (user_ict[i].programe == 'M.Tech - Data Science') {
-        vector[5] += 1;
+      } else if (user_ict[i].programe == 'B.Tech - ICT (RAS))') {
+        vector[1] += 1;
       }
     }
 
