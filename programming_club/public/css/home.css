@@ -70,6 +70,28 @@ body {
 }
 
 
+.cal{
+    text-align: center;
+    border-radius: 3px;
+    /* margin: auto; */
+    margin-top: 2%;
+    margin-bottom: 2%;
+    height: 100px;
+    width: 100px;
+    justify-content: center;
+    /* margin-right: auto;
+    margin-left: auto; */
+}
+
+.cal, .Desc {
+    width:100%; /* set the width of each item to 50% */
+    text-align: center; /* centers the text inside each item */
+  }
+.Desc{
+    margin-left: 0%;
+}
+
+
 
 @media screen and (max-width: 760px) and (min-width: 500px) {
     .slider-img img {
@@ -99,7 +121,7 @@ body {
  */
  body {
     background: #CCC;
-    font-family: Roboto;
+
   }
   .cont {
     text-align: center;
@@ -107,7 +129,7 @@ body {
     margin: auto;
     margin-top: 2%;
     margin-bottom: 2%;
-    height: 50px;
+    height: 120px;
     width: 100px;
   }
   .month {
